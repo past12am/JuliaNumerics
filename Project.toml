@@ -1,0 +1,10 @@
+name = "Numerics"
+uuid = "c8dc9ae1-0699-443d-bf24-c5cad3ebe940"
+authors = ["Paul Mirtl"]
+version = "0.1.0"
+
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+
+[compat]
+LinearAlgebra = "1.11.0"
