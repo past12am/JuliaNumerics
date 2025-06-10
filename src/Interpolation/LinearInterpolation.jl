@@ -22,4 +22,9 @@ module LinearInterpolation
 
         throw(ErrorException("Out of bounds for interpolation"))
     end
+
+    
+    function interpolate(x::Number, x_prev::Number, x_next::Number, f_prev::Number, f_next::Number)
+        return f_prev + (f_next - f_prev) / (x_next - x_prev) * (x - x_prev)
+    end
 end
