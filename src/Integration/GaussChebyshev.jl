@@ -32,4 +32,13 @@ module GaussChebyshev
 
         return res
     end
+
+    function integrate_complex(integrator::GaussChebyIntegrator, f::Function)
+        res::ComplexF64 = 0.0
+        for i = 1:length(integrator.data.x)
+            res += integrator.data.w[i] * f(integrator.data.x[i])
+        end
+
+        return res
+    end
 end

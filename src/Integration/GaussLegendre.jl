@@ -19,8 +19,9 @@ module GaussLegendre
             # find zeros
             x_guesses = cos.((narray .- 0.25) .* (pi / (N + 0.5)))
             
-            for i = 1:length(x_guesses)
-                x[i] = NewtonRaphson.find_roots(leg_dleg_N, x_guesses[i], 1E-12)
+            len = length(x_guesses)
+            for i = 1:len
+                x[len-i+1] = NewtonRaphson.find_roots(leg_dleg_N, x_guesses[i], 1E-12)
             end
 
             # generate weights

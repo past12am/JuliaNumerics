@@ -1,6 +1,6 @@
 module ChebyshevPolynomials    
     
-    function chebyshev_poly(x::Real, N::Integer)
+    function chebyshev_poly_first_kind(x::Real, N::Integer)
         if N==0
             return 1.0
 
@@ -25,4 +25,13 @@ module ChebyshevPolynomials
         throw(ErrorException("Polynomial of degree $(N) seems weird"))
     end
 
+    # https://mathworld.wolfram.com/ChebyshevPolynomialoftheSecondKind.html
+    function chebyshev_poly_second_kind_cosTheta(cosTheta::Real, n::Integer)
+        theta = acos(cosTheta)
+        return sin((n + 1) * theta) / sin(theta)
+    end
+
+    function chebyshev_poly_second_kind_roots(N::Integer)
+        return [cos(pi * (j + 1) / N) for j in 0:(N-1)]
+    end
 end

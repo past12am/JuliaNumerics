@@ -65,6 +65,10 @@ module CSplineInterpolation
         # TODO move if to "parent" method (same for Linear Interpolation)
         if (cspline_interp.x[1] < x && x < cspline_interp.x[end])
             i::Int = idx_function(x, cspline_interp.x)
+
+            if (i < 0)
+                print(idx_function)
+            end
         
             xi = cspline_interp.x[i]
             xip1 = cspline_interp.x[i+1]
@@ -81,7 +85,7 @@ module CSplineInterpolation
             return cspline_interp.y[end]
         end
 
-        throw(ErrorException("Out of bounds for interpolation"))
+        throw(ErrorException("Out of bounds for interpolation: $(x) not in [$(maximum(cspline_interp.x)), $(minimum(cspline_interp.x))]"))
         
     end
 
