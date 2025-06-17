@@ -32,6 +32,6 @@ module ChebyshevPolynomials
     end
 
     function chebyshev_poly_second_kind_roots(N::Integer)
-        return [cos(pi * (j + 1) / N) for j in 0:(N-1)]
+        return [cos(pi * j / (N + 1)) for j in 1:N]
     end
 end
