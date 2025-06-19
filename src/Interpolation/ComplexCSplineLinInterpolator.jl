@@ -34,6 +34,14 @@ module ComplexCSplineLinInterpolation
         x_real = real(x)
         x_imag = imag(x)
 
+        # Check if the requested x is within bounds TODO also for real part
+        if (x_imag < compl_spline_lin_interp.imaginaries[1])
+            error("requesting spline at $(x_imag) below bounds $(compl_spline_lin_interp.imaginaries[1])")
+        end
+        if (x_imag > compl_spline_lin_interp.imaginaries[end])
+            error("requesting spline at $(x_imag) above bounds $(compl_spline_lin_interp.imaginaries[end])")
+        end
+
         # Find idx of the spline to use
         idx = compl_spline_lin_interp.idx_function_imaginaries(x_imag, compl_spline_lin_interp.imaginaries)
 
