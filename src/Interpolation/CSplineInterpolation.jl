@@ -1,7 +1,7 @@
 module CSplineInterpolation
     using LinearAlgebra
     
-    struct CSplineInterpolator
+    mutable struct CSplineInterpolator
         x::AbstractArray{<:Number}
 
         y::AbstractArray{<:Number}
@@ -11,6 +11,11 @@ module CSplineInterpolation
             dd_f = solve_interpolation(x, f)
             return new(x, f, dd_f)
         end
+    end
+
+    function updateInterpolation(interpolator::CSplineInterpolator, new_f::AbstractArray{<:Number})
+        interpolator.y[:] .= new_f[:]
+        interpolator.dd_y[:] .= solve_interpolation(interpolator.x, interpolator.y)[:]
     end
 
     function solve_interpolation(x::AbstractArray{<:Number}, y::AbstractArray{<:Number})::AbstractArray{Number}

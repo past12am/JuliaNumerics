@@ -71,4 +71,16 @@ module GaussLegendre
 
         return sum / B
     end
+
+    function get_logspaced_grid_matching(integrator::GaussLegendreIntegrator, a::Number, b::Number)  # TODO move to base module
+        A = - log(a * b) / log(b / a)
+        B = 2.0 / log(b / a)
+        
+        grid = zeros(typeof(integrator.data.x[1]), size(integrator.data.x))
+        for i in eachindex(integrator.data.x)
+            grid[i] = exp((integrator.data.x[i] - A) / B)
+        end
+
+        return grid
+    end
 end

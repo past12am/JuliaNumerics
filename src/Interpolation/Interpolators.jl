@@ -7,7 +7,13 @@ module Interpolators
     end
 
     function idx_function_general(x::Number, x_arr)::Int
-        # TODO
+        for (i, val) in enumerate(x_arr)
+            if (val > x)
+                return i - 1
+            end
+        end
+
+        return nothing
     end
 
     function idx_function_log_grid(x::Number, x_arr)::Int
@@ -32,8 +38,8 @@ module Interpolators
         end
     end
 
-    include("./LinearInterpolation.jl")
-    include("./CSplineInterpolation.jl")
-    include("./ChebyInterpolation.jl")
-    include("./ComplexCSplineLinInterpolator.jl")
+    include("LinearInterpolation.jl")
+    include("CSplineInterpolation.jl")
+    include("ChebyInterpolation.jl")
+    include("ComplexCSplineLinInterpolator.jl")
 end
