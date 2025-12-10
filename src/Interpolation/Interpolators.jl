@@ -7,10 +7,18 @@ module Interpolators
     end
 
     function idx_function_general(x::Number, x_arr)::Int
+        if isapprox(x, x_arr[1])
+            return 1
+        end
+
         for (i, val) in enumerate(x_arr)
             if (val > x)
                 return i - 1
             end
+        end
+
+        if isapprox(x, x_arr[end])
+            return length(x_arr)
         end
 
         return nothing

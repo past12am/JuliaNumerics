@@ -14,8 +14,8 @@ module CSplineInterpolation
     end
 
     function updateInterpolation(interpolator::CSplineInterpolator, new_f::AbstractArray{<:Number})
-        interpolator.y[:] .= new_f[:]
-        interpolator.dd_y[:] .= solve_interpolation(interpolator.x, interpolator.y)[:]
+        interpolator.y[:] = new_f[:]
+        interpolator.dd_y[:] = solve_interpolation(interpolator.x, interpolator.y)[:]
     end
 
     function solve_interpolation(x::AbstractArray{<:Number}, y::AbstractArray{<:Number})::AbstractArray{Number}
@@ -70,6 +70,14 @@ module CSplineInterpolation
         # TODO move if to "parent" method (same for Linear Interpolation)
         if (cspline_interp.x[1] < x && x < cspline_interp.x[end])
             i::Int = idx_function(x, cspline_interp.x)
+
+            if isapprox(cspline_interp.x[i], x)
+                return cspline_interp.y[i]
+            elseif isapprox(cspline_interp.x[i+1], x)
+                return cspline_interp.y[i+1]
+            end
+
+            @assert cspline_interp.x[i] < x < cspline_interp.x[i+1]
 
             if (i < 0)
                 print(idx_function)

@@ -9,8 +9,10 @@ module GaussChebyshev
         GaussChebyData(N::Int) = begin
             narray = Float64.(1:N)
 
-            x = cos.(narray .* (pi / (N + 1.0)))
-            w = pi / (N + 1) .* sin.(narray .* (pi / (N + 1.0))).^2
+            a = pi / (N + 1.0)
+
+            x = cos.(narray .* a)
+            w = a .* (sin.(narray .* a)).^2
 
             return new(x, w)
         end
@@ -24,6 +26,7 @@ module GaussChebyshev
         end
     end
 
+    # TODO check GC integrator
     function integrate(integrator::GaussChebyIntegrator, f::Function)
         res::Float64 = 0.0
         for i = 1:length(integrator.data.x)
