@@ -7,4 +7,6 @@ module Numerics
     include("Integration/Integrators.jl")
 
     include("Interpolation/Interpolators.jl")
+
+    include("Extrapolation/Schlessinger.jl")
 end
