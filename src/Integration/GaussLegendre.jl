@@ -10,24 +10,28 @@ module GaussLegendre
         w::AbstractArray{Float64}
 
         GaussLegendreData(N::Int) = begin
-            narray = Float64.(1:N)
-            x = zeros(N)
+            if (N > 0)
+                narray = Float64.(1:N)
+                x = zeros(N)
 
-            # generate legpol
-            leg_dleg_N(x) = Polynomials.legendre_poly_and_deriv(x, N)
+                # generate legpol
+                leg_dleg_N(x) = Polynomials.legendre_poly_and_deriv(x, N)
 
-            # find zeros
-            x_guesses = cos.((narray .- 0.25) .* (pi / (N + 0.5)))
-            
-            len = length(x_guesses)
-            for i = 1:len
-                x[len-i+1] = NewtonRaphson.find_roots(leg_dleg_N, x_guesses[i], 1E-12)
+                # find zeros
+                x_guesses = cos.((narray .- 0.25) .* (pi / (N + 0.5)))
+                
+                len = length(x_guesses)
+                for i = 1:len
+                    x[len-i+1] = NewtonRaphson.find_roots(leg_dleg_N, x_guesses[i], 1E-12)
+                end
+
+                # generate weights
+                w = 2.0 / (N + 1.0)^2 .* ((1.0 .- x.^2) ./ (Polynomials.legendre_poly.(x, N+1)).^2)
+
+                return new(x, w)
+            else
+                return new([], [])
             end
-
-            # generate weights
-            w = 2.0 / (N + 1.0)^2 .* ((1.0 .- x.^2) ./ (Polynomials.legendre_poly.(x, N+1)).^2)
-
-            return new(x, w)
         end
     end    
 
@@ -78,9 +82,35 @@ module GaussLegendre
         
         grid = zeros(typeof(integrator.data.x[1]), size(integrator.data.x))
         for i in eachindex(integrator.data.x)
-            grid[i] = exp((integrator.data.x[i] - A) / B)
+            grid[i] = exp((integrator.data.x[i] - A)/B)
         end
 
         return grid
+    end
+
+    function get_locspaced_jacobian_matching(integrator::GaussLegendreIntegrator, a::Number, b::Number) #TODO check this is correct
+        A = - log(a * b) / log(b / a)
+        B = 2.0 / log(b / a)
+
+        jacobian = zeros(typeof(integrator.data.x[1]), size(integrator.data.x))
+        for i in eachindex(integrator.data.x)
+            jacobian[i] = exp((integrator.data.x[i] - A)/B) / B
+        end
+
+        return jacobian
+    end
+
+    function get_linear_grid_matching(integrator::GaussLegendreIntegrator, a::Number, b::Number)
+        grid = zeros(Float64, length(integrator.data.x))
+
+        for i = 1:length(integrator.data.x)
+            grid[i] = ((b - a) * integrator.data.x[i] + a + b) / 2.0
+        end
+
+        return grid
+    end
+
+    function get_linear_jacobian_matching(integrator::GaussLegendreIntegrator, a::Number, b::Number)
+        return (b - a) / 2.0 .+ zeros(Float64, length(integrator.data.x))
     end
 end
