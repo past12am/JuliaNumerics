@@ -27,6 +27,10 @@ module ChebyshevPolynomials
 
     # https://mathworld.wolfram.com/ChebyshevPolynomialoftheSecondKind.html
     function chebyshev_poly_second_kind_cosTheta(cosTheta::Real, n::Integer)
+        if (isapprox(abs(cosTheta), 1.0))
+            throw(DomainError("Chebyshev Polynomials of the second kind only implemented on the closed interval (-1, 1)"))
+        end
+
         theta = acos(cosTheta)
         return sin((n + 1) * theta) / sin(theta)
     end
