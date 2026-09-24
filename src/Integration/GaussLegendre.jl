@@ -6,8 +6,8 @@ module GaussLegendre
 
     ##################### Gauss Legendre #####################
     struct GaussLegendreData
-        x::AbstractArray{Float64}
-        w::AbstractArray{Float64}
+        x::Vector{Float64}
+        w::Vector{Float64}
 
         GaussLegendreData(N::Int) = begin
             if (N > 0)
@@ -30,7 +30,7 @@ module GaussLegendre
 
                 return new(x, w)
             else
-                return new([], [])
+                return new(Float64[], Float64[])
             end
         end
     end    

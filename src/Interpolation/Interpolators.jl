@@ -21,6 +21,7 @@ module Interpolators
             return length(x_arr)
         end
 
+        throw(DomainError(x, "outside grid [$(x_arr[1]), $(x_arr[end])]"))
         return nothing
     end
 
@@ -36,10 +37,10 @@ module Interpolators
 
         center_element = x_arr[center_idx]
         if x > center_element
-            i = idx_function_log_grid(x, x_arr[center_idx:end]) + center_idx - 1
+            i = idx_function_log_grid(x, @view x_arr[center_idx:end]) + center_idx - 1
             return i
         elseif x < center_element
-            i = idx_function_log_grid(x, x_arr[1:center_idx])
+            i = idx_function_log_grid(x, @view x_arr[1:center_idx])
             return i
         else
             return center_idx

@@ -3,7 +3,7 @@ module ChebyInterpolation
     
     struct ChebyInterpolatorFirstKind
         #linear_interpolator::LinearInterpolator
-        d::AbstractArray{<:Number}
+        d::Vector{Float64}
         M::Int
 
         ChebyInterpolatorFirstKind(x::AbstractArray, f::AbstractArray, M::Int) = begin
@@ -11,7 +11,7 @@ module ChebyInterpolation
         end
     end
 
-    function calc_di_first_kind(x::AbstractArray, f::AbstractArray, M::Int, N::Int)::AbstractArray
+    function calc_di_first_kind(x::AbstractArray, f::AbstractArray, M::Int, N::Int)
         d = zeros(Float64, M)
 
         for i = 1:M
@@ -49,20 +49,18 @@ module ChebyInterpolation
 
 
 
-    struct ChebyInterpolatorSecondKind
+    struct ChebyInterpolatorSecondKind{T<:Number}
         #linear_interpolator::LinearInterpolator
-        c::AbstractArray{<:Number}
+        c::Vector{T}
         n::Int
 
-        fType::Type
-
-        ChebyInterpolatorSecondKind(x::AbstractArray, f::AbstractArray) = begin
+        ChebyInterpolatorSecondKind(x::AbstractArray, f::AbstractArray{T}) where {T} = begin
             n = length(x)
-            return new(calc_ci_second_kind(x, f, n), n, eltype(f))
+            return new{T}(calc_ci_second_kind(x, f, n), n)
         end
     end
 
-    function calc_ci_second_kind(x::AbstractArray, f::AbstractArray, n::Int)::AbstractArray
+    function calc_ci_second_kind(x::AbstractArray, f::AbstractArray, n::Int)
         c = zeros(eltype(f), n)
 
         for i = 0:n-1
@@ -74,8 +72,8 @@ module ChebyInterpolation
         return c
     end
 
-    function interpolate(x::Number, interpolator::ChebyInterpolatorSecondKind)
-        res = zero(interpolator.fType)
+    function interpolate(x::Number, interpolator::ChebyInterpolatorSecondKind{T}) where {T}
+        res = zero(T)
 
         for i = 0:interpolator.n-1
             res += interpolator.c[i+1] * ChPoly.chebyshev_poly_second_kind_cosTheta(x, i)

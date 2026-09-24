@@ -3,17 +3,17 @@ module ComplexCSplineLinInterpolation
     import ..LinearInterpolation as LinInterp
     import ..CSplineInterpolation as CSplineInterp
 
-    struct ComplexCSplineLinInterpolator
-        imaginaries::AbstractArray{<:Real}
+    struct ComplexCSplineLinInterpolator{FI<:Function, FR<:Function}
+        imaginaries::Vector{Float64}
 
-        csplines_f_real::AbstractArray{CSplineInterp.CSplineInterpolator}
-        csplines_f_imag::AbstractArray{CSplineInterp.CSplineInterpolator}
+        csplines_f_real::Vector{CSplineInterp.CSplineInterpolator}
+        csplines_f_imag::Vector{CSplineInterp.CSplineInterpolator}
 
-        idx_function_imaginaries::Function
-        idx_function_real_grid::Function
+        idx_function_imaginaries::FI
+        idx_function_real_grid::FR
 
         # We assume the imaginary part to make up the first dimension of f_real and f_imag
-        ComplexCSplineLinInterpolator(x_real_arr::AbstractArray{<:Real}, x_imag_arr::AbstractArray{<:Real}, f_real_arr::AbstractArray{<:Real, 2}, f_imag_arr::AbstractArray{<:Real, 2}, idx_function_imaginaries::Function, idx_function_real_grid::Function) = begin
+        ComplexCSplineLinInterpolator(x_real_arr::AbstractArray{<:Real}, x_imag_arr::AbstractArray{<:Real}, f_real_arr::AbstractArray{<:Real, 2}, f_imag_arr::AbstractArray{<:Real, 2}, idx_function_imaginaries::FI, idx_function_real_grid::FR) where {FI<:Function, FR<:Function} = begin
             
             csplines_f_real = Array{CSplineInterp.CSplineInterpolator, 1}(undef, length(x_imag_arr))
             csplines_f_imag = Array{CSplineInterp.CSplineInterpolator, 1}(undef, length(x_imag_arr))
@@ -23,7 +23,7 @@ module ComplexCSplineLinInterpolation
                 csplines_f_imag[i] = CSplineInterp.CSplineInterpolator(x_real_arr, f_imag_arr[i, :])
             end
 
-            return new(x_imag_arr, csplines_f_real, csplines_f_imag, idx_function_imaginaries, idx_function_real_grid)
+            return new{FI, FR}(Vector{Float64}(x_imag_arr), csplines_f_real, csplines_f_imag, idx_function_imaginaries, idx_function_real_grid)
         end
     end
 

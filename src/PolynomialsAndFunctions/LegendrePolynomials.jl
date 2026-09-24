@@ -20,7 +20,7 @@ module LegendrePolynomials
             return N * (legendre_poly(x, N-1) - x * legendre_poly(x, N)) / (1.0 - x^2)
         end
         
-        return 0
+        return 0.0
     end
 
     

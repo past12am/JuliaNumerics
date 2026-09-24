@@ -35,6 +35,10 @@ module ChebyshevPolynomials
         return sin((n + 1) * theta) / sin(theta)
     end
 
+    function chebyshev_poly_second_kind_theta(theta::Real, n::Integer)
+        return sin((n + 1) * theta) / sin(theta)
+    end
+
     function chebyshev_poly_second_kind_roots(N::Integer)
         return [cos(pi * j / (N + 1)) for j in 1:N]
     end

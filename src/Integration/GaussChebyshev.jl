@@ -3,8 +3,8 @@ module GaussChebyshev
     
     ##################### Gauss Chebyshev #####################
     struct GaussChebyData
-        x::AbstractArray{Float64}
-        w::AbstractArray{Float64}
+        x::Vector{Float64}
+        w::Vector{Float64}
 
         GaussChebyData(N::Int) = begin
             narray = Float64.(1:N)

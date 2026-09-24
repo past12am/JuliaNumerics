@@ -1,11 +1,11 @@
 module CSplineInterpolation
     using LinearAlgebra
     
-    mutable struct CSplineInterpolator
-        x::AbstractArray{<:Number}
+    struct CSplineInterpolator
+        x::Vector{Float64}
 
-        y::AbstractArray{<:Number}
-        dd_y::AbstractArray{<:Number}
+        y::Vector{Float64}
+        dd_y::Vector{Float64}
 
         CSplineInterpolator(x::AbstractArray{<:Number}, f::AbstractArray{<:Number}) = begin
             dd_f = solve_interpolation(x, f)
@@ -14,11 +14,11 @@ module CSplineInterpolation
     end
 
     function updateInterpolation(interpolator::CSplineInterpolator, new_f::AbstractArray{<:Number})
-        interpolator.y[:] = new_f[:]
-        interpolator.dd_y[:] = solve_interpolation(interpolator.x, interpolator.y)[:]
+        interpolator.y .= new_f
+        interpolator.dd_y .= solve_interpolation(interpolator.x, interpolator.y)
     end
 
-    function solve_interpolation(x::AbstractArray{<:Number}, y::AbstractArray{<:Number})::AbstractArray{Number}
+    function solve_interpolation(x::AbstractArray{<:Number}, y::AbstractArray{<:Number})
         N = length(x)
         
         r = zeros(Float64, N)
