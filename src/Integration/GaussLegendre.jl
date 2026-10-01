@@ -52,6 +52,18 @@ module GaussLegendre
         return sum
     end
 
+    function integrate_vector_entrywise(integrator::GaussLegendreIntegrator, f::Function)
+        x = integrator.data.x
+        w = integrator.data.w
+
+        sum = w[1] * f(x[1])
+        for i = 2:length(x)
+            sum += w[i] * f(x[i])
+        end
+
+        return sum
+    end
+
     function integrate(integrator::GaussLegendreIntegrator, f::Function, a::Number, b::Number)
         sum::ComplexF64 = 0
         for i = 1:length(integrator.data.x)
@@ -61,19 +73,50 @@ module GaussLegendre
         return (b - a) / 2.0 * sum
     end
 
+    function integrate_vector_entrywise(integrator::GaussLegendreIntegrator, f::Function, a::Number, b::Number)
+        x = integrator.data.x
+        w = integrator.data.w
+
+        h = (b - a) / 2.0
+        m = (a + b) / 2.0
+
+        sum = w[1] * f(h * x[1] + m)
+        for i = 2:length(x)
+            sum += w[i] * f(h * x[i] + m)
+        end
+
+        return h * sum
+    end
+
     function integrate_logspaced(integrator::GaussLegendreIntegrator, f::Function, a::Number, b::Number)
         sum::ComplexF64 = 0.0
         
         A = - log(a * b) / log(b / a)
         B = 2.0 / log(b / a)
 
-        # TODO
         for i = 1:length(integrator.data.x)
             z = exp((integrator.data.x[i] - A)/B)
             sum += f(z) * z * integrator.data.w[i]
         end
 
         return sum / B
+    end
+
+    function integrate_vector_entrywise_logspaced(integrator::GaussLegendreIntegrator, f::Function, a::Number, b::Number)
+        x = integrator.data.x
+        w = integrator.data.w
+        
+        A = - log(a * b) / log(b / a)
+        B = 2.0 / log(b / a)
+
+        z = exp((x[1] - A)/B)
+        sum = f(z) * z * w[1]
+        for i = 2:length(x)
+            z = exp((x[i] - A)/B)
+            sum += f(z) * z * w[i]
+        end
+
+        return sum ./ B
     end
 
     function get_logspaced_grid_matching(integrator::GaussLegendreIntegrator, a::Number, b::Number)  # TODO move to base module
