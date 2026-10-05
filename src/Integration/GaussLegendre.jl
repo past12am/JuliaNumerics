@@ -131,7 +131,7 @@ module GaussLegendre
         return grid
     end
 
-    function get_locspaced_jacobian_matching(integrator::GaussLegendreIntegrator, a::Number, b::Number) #TODO check this is correct
+    function get_logspaced_jacobian_matching(integrator::GaussLegendreIntegrator, a::Number, b::Number) #TODO check this is correct
         A = - log(a * b) / log(b / a)
         B = 2.0 / log(b / a)
 

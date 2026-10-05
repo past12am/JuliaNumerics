@@ -4,7 +4,7 @@ module NewtonRaphson
         dx::Float64 = 1E5
 
         root = x0
-        while dx > acc
+        while abs(dx) > acc
             f_val, df_val = f_df_tuple(root)
 
             dx = f_val / df_val

@@ -1,9 +1,9 @@
 module LinearInterpolation
     
     # If I want to interpolate a complex function --> 2D interpolation/separately for real/imag part?
-    struct LinearInterpolator 
-        x::AbstractArray{<:Number}    # TODO This should be a pointer?
-        f::AbstractArray{<:Number}    # TODO This should be a pointer?
+    struct LinearInterpolator   # TODO optimize this --> no abstract types
+        x::AbstractArray{<:Number}
+        f::AbstractArray{<:Number}
     end
 
     # Spacing function yields how the grid is interpolated, it should have signature

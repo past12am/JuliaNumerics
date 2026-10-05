@@ -51,4 +51,5 @@ module Interpolators
     include("CSplineInterpolation.jl")
     include("ChebyInterpolation.jl")
     include("ComplexCSplineLinInterpolator.jl")
+    include("CauchyIntegralInterpolation.jl")
 end
