@@ -88,6 +88,22 @@ module GaussLegendre
         return h * sum
     end
 
+    function integrate_vector_entrywise!(out::AbstractArray{<:Number}, f_buffer::AbstractArray{<:Number}, integrator::GaussLegendreIntegrator, f::Function, a::Number, b::Number)
+        x = integrator.data.x
+        w = integrator.data.w
+
+        h = (b - a) / 2.0
+        m = (a + b) / 2.0
+
+        fill!(out, zero(eltype(out)))
+        for i = 1:length(x)
+            f(f_buffer, h * x[i] + m)   # f_buffer[i, a] = f(h * x[i] + m) at each i, a
+            out .+= (h * w[i]) .* f_buffer
+        end
+
+        return out
+    end
+
     function integrate_logspaced(integrator::GaussLegendreIntegrator, f::Function, a::Number, b::Number)
         sum::ComplexF64 = 0.0
         
